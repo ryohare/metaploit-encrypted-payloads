@@ -100,3 +100,12 @@ i686-w64-mingw32-g++ loader.cpp -o loader.exe -static-libgcc -static-libstdc++
 
 ### Results
 These two files, `loader.exe` and `shellcode.dll` where downloaded on the victim Windows machine and were launched via the commandline and a successful reverse shell was received in `metasploit`. These techniques seem good enough for now to bypass Windows defender.
+
+## Revisiting Meterpreter
+It was discovered using `shikata_ga_nai` encoding, the DLL could be landed on the machine without a static match. However, on execution, the meterpreter behavior was detected and blocked as it tried to to download the stage from msfconsole. Creating a stageless payload with encryption and encoding was statically flaged by Defender as well.
+
+I investigated the methods described below for meterpreter and Defender caught both statically.
+
+[Windows Defender Bypassing For Meterpreter](https://hacker.house/lab/windows-defender-bypassing-for-meterpreter/)
+
+[Evading Antivirus with Better Meterpreter Payloads](https://securityboulevard.com/2020/02/evading-antivirus-with-better-meterpreter-payloads/)
